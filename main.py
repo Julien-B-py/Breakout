@@ -14,6 +14,8 @@ second_row = [Brick(x * 128, 40) for x in range(10)]
 third_row = [Brick(x * 128, 80) for x in range(10)]
 bricks = first_row + second_row + third_row
 
+# bricks = [Brick(0,0)]
+
 paddle = Paddle()
 ball = Ball(paddle, bricks)
 
