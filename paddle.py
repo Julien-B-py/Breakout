@@ -11,7 +11,7 @@ class Paddle:
         self.y = WINDOW['height'] - self.height
         self.rect = pygame.rect.Rect((self.x, self.y, self.width, self.height))
 
-        self.image = pygame.image.load('paddle.png')
+        self.image = pygame.image.load('images/paddle.png')
 
     def draw(self, surface):
 

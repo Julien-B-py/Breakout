@@ -6,17 +6,25 @@ from settings import WINDOW
 
 
 class Ball:
-    def __init__(self, paddle, bricks, sound):
+    def __init__(self, paddle, bricks, sound, game):
+        """ Create a new instance of the ball object. """
         self.radius = 10
         self.bounces_count = 0
-        self.x = (WINDOW['width'] - self.radius) / 2
+        # Starting position of the center of the ball
+        self.x = WINDOW['width'] / 2
         self.y = WINDOW['height'] - self.radius - 30
 
-        self.image = pygame.image.load('ball.png')
+
+        # # bottom left corner
+        # self.x = 0+self.radius
+        # self.y=720-self.radius
+
+        self.image = pygame.image.load('images/ball.png')
 
         self.paddle = paddle
         self.bricks = bricks
         self.sound = sound
+        self.game = game
 
         self.init_velocity()
 
@@ -90,6 +98,8 @@ class Ball:
                     else:
                         self.bricks.remove(brick)
 
+                    self.game.increment_score()
+
                     break
 
                 # Collision with top side of the brick
@@ -105,6 +115,8 @@ class Ball:
                         brick.damaged = True
                     else:
                         self.bricks.remove(brick)
+
+                    self.game.increment_score()
 
                     break
 
@@ -124,6 +136,8 @@ class Ball:
                     else:
                         self.bricks.remove(brick)
 
+                    self.game.increment_score()
+
                     break
 
                 # Collision with left side of the brick
@@ -139,6 +153,8 @@ class Ball:
                         brick.damaged = True
                     else:
                         self.bricks.remove(brick)
+
+                    self.game.increment_score()
 
                     break
 
