@@ -2,41 +2,53 @@ import random
 
 import pygame.rect
 
-from settings import WINDOW, COLORS
+from settings import WINDOW
 
 
 class Ball:
-    def __init__(self, paddle, bricks):
+    def __init__(self, paddle, bricks, sound):
         self.radius = 10
         self.bounces_count = 0
         self.x = (WINDOW['width'] - self.radius) / 2
-        self.y = WINDOW['height'] - self.radius - 20
+        self.y = WINDOW['height'] - self.radius - 30
+
+        self.image = pygame.image.load('ball.png')
 
         self.paddle = paddle
         self.bricks = bricks
+        self.sound = sound
 
         self.init_velocity()
 
     def draw(self, surface):
-        pygame.draw.circle(surface, COLORS['WHITE'], (self.x, self.y), self.radius)
+
+        surface.blit(self.image, (self.x - 10, self.y - 10))
+
+        # pygame.draw.circle(surface, COLORS['WHITE'], (self.x, self.y), self.radius)
 
     def init_velocity(self):
-
-
         self.x_vel = random.randint(-5, 5)
         while self.x_vel == 0:
             self.x_vel = random.randint(-5, 5)
-
-        self.y_vel = -5
+        self.y_vel = random.randint(-5, -3)
 
     def move(self):
         if self.x < self.radius or self.x > WINDOW['width'] - self.radius:
             self.bounce_x()
+            self.sound.play('wall_bounce')
         self.x += self.x_vel
 
-        if self.y < self.radius or self.is_in_collision_with_paddle() or self.is_in_collision_with_brick():
+        if self.y < self.radius or self.is_in_collision_with_paddle():
             self.bounce_y()
+            if self.y < self.radius:
+                self.sound.play('wall_bounce')
+            else:
+
+                self.sound.play('paddle_bounce')
+
         self.y += self.y_vel
+
+        self.is_in_collision_with_brick()
 
     def bounce_x(self):
         self.x_vel = - self.x_vel
@@ -53,7 +65,12 @@ class Ball:
             self.speed_up()
 
     def is_in_collision_with_paddle(self):
-        return self.paddle.rect.collidepoint(self.x, self.y)
+        # If ball position is between left and right sides of the paddle
+        if self.paddle.rect.left <= self.x <= self.paddle.rect.right:
+            # If ball position above the paddle and the distance between ball and paddle is less than a ball radius
+            if self.y < self.paddle.rect.top and self.paddle.rect.top - self.y <= self.radius:
+                return True
+        return False
 
     def is_in_collision_with_brick(self):
         for brick in self.bricks:
@@ -63,11 +80,13 @@ class Ball:
                 # If ball is under the brick and distance between the ball and the bottom of brick is less than a ball radius
                 if self.y > brick.rect.bottom and self.y - brick.rect.bottom <= self.radius:
 
-
                     self.bounce_y()
+
+                    self.sound.play('brick_hit')
 
                     if brick.hp > 1:
                         brick.hp -= 1
+                        brick.damaged = True
                     else:
                         self.bricks.remove(brick)
 
@@ -77,28 +96,31 @@ class Ball:
                 # If ball is above the brick and distance between the ball and the top of brick is less than a ball radius
                 elif self.y < brick.rect.top and brick.rect.top - self.y <= self.radius:
 
-
                     self.bounce_y()
+
+                    self.sound.play('brick_hit')
 
                     if brick.hp > 1:
                         brick.hp -= 1
+                        brick.damaged = True
                     else:
                         self.bricks.remove(brick)
 
                     break
 
-
             # Check horizontal collisions
-            elif brick.rect.top <= self.y <= brick.rect.bottom:
+            if brick.rect.top <= self.y <= brick.rect.bottom:
                 # Collision with right side of the brick
                 # If ball is on the right of the brick and distance between the ball and the right of brick is less than a ball radius
                 if self.x > brick.rect.right and self.x - brick.rect.right <= self.radius:
 
-
                     self.bounce_x()
+
+                    self.sound.play('brick_hit')
 
                     if brick.hp > 1:
                         brick.hp -= 1
+                        brick.damaged = True
                     else:
                         self.bricks.remove(brick)
 
@@ -108,18 +130,17 @@ class Ball:
                 # If ball is on the left of the brick and distance between the ball and the left of brick is less than a ball radius
                 elif self.x < brick.rect.left and brick.rect.left - self.x <= self.radius:
 
-
                     self.bounce_x()
+
+                    self.sound.play('brick_hit')
 
                     if brick.hp > 1:
                         brick.hp -= 1
+                        brick.damaged = True
                     else:
                         self.bricks.remove(brick)
 
                     break
-
-
-
 
     def speed_up(self):
         if self.x_vel > 0:

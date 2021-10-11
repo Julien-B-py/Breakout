@@ -1,6 +1,6 @@
 import pygame.rect
 
-from settings import WINDOW, COLORS
+from settings import WINDOW
 
 
 class Paddle:
@@ -11,14 +11,17 @@ class Paddle:
         self.y = WINDOW['height'] - self.height
         self.rect = pygame.rect.Rect((self.x, self.y, self.width, self.height))
 
+        self.image = pygame.image.load('paddle.png')
+
     def draw(self, surface):
+
+        surface.blit(self.image, (self.x, self.y))
         self.rect = pygame.rect.Rect((self.x, self.y, self.width, self.height))
-        pygame.draw.rect(surface, COLORS['WHITE'], self.rect)
 
     def move_left(self):
         if self.x >= 0:
             self.x -= 15
 
     def move_right(self):
-        if self.x <= WINDOW['width']-self.width:
+        if self.x <= WINDOW['width'] - self.width:
             self.x += 15
