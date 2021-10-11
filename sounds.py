@@ -7,7 +7,7 @@ class Sound:
         self.sounds = {
             'wall_bounce': pygame.mixer.Sound("wall_bounce.ogg"),
             'paddle_bounce': pygame.mixer.Sound("paddle_bounce.ogg"),
-            'brick_hit': pygame.mixer.Sound("brick_hit.mp3"),
+            'brick_hit': pygame.mixer.Sound("brick_hit.ogg"),
         }
 
     def play(self, name):

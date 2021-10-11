@@ -11,7 +11,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WINDOW['width'], WINDOW['height']))
 
 
-background = pygame.image.load('bg.png')
+background = pygame.image.load('bg2.png')
 brick_regular = pygame.image.load("brick.png")
 brick_damaged = pygame.image.load("brick_damaged.png")
 
